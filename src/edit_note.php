@@ -17,7 +17,7 @@ if (isset($_GET['id'])) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = trim($_POST['title']);
-    $content = trim($_POST['content']);
+    $content = $_POST['content'];
     $id = $_POST['id'];
 
     if (empty($title) || empty($content)) {
@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notes App</title>
+    <title>Notes</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-800 text-white">
@@ -59,35 +59,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <h2 class="text-lg font-bold">Edit a Note</h2>
             <form action="edit_note.php" method="POST">
                 <div>
-                  <label for="title">Title:</label>
-                  <input
-                    type="text"
-                    name="title"
-                    placeholder="Title"
-                    required
-                    maxlength="255"
-                    value="<?php echo htmlspecialchars($note->title); ?>"
-                    class="border bg-slate-700 border-slate-600 p-2 rounded w-full">
+                    <label for="title">Title:</label>
+                    <input
+                        type="text"
+                        name="title"
+                        placeholder="Title"
+                        required
+                        maxlength="255"
+                        value="<?php echo htmlspecialchars($note->title); ?>"
+                        class="border bg-slate-700 border-slate-600 p-2 rounded w-full">
                 </div>
                 <div>
-                  <label for="content">Content:</label>
-                  <textarea
-                    name="content"
-                    placeholder="Content"
-                    required
-                    class="border bg-slate-700 border-slate-600 p-2 rounded w-full h-32"><?php echo htmlspecialchars($note->content); ?></textarea>
+                    <label for="content">Content:</label>
+                    <textarea
+                        name="content"
+                        placeholder="Content"
+                        required
+                        class="border bg-slate-700 border-slate-600 p-2 rounded w-full h-32"><?php echo htmlspecialchars($note->content); ?></textarea>
                 </div>
                 <input type="hidden" name="id" value="<?php echo htmlspecialchars($note->id); ?>">
                 <div>
-                  <label for="author">Author:</label>
-                  <p class="border bg-slate-700 border-slate-600 p-2 rounded w-full">
-                    <?php echo htmlspecialchars($note->author); ?>
-                  </p>
+                    <label for="author">Author:</label>
+                    <p class="border bg-slate-700 border-slate-600 p-2 rounded w-full">
+                        <?php echo htmlspecialchars($note->author); ?>
+                    </p>
                 </div>
                 <?php echo $message ?? null ?>
                 <button
-                  type="submit"
-                  class="bg-slate-600 w-full hover:bg-slate-500 text-white font-bold py-2 px-4 rounded mx-auto my-2">Update Note</button>
+                    type="submit"
+                    class="bg-slate-600 w-full hover:bg-slate-500 text-white font-bold py-2 px-4 rounded mx-auto my-2">Update Note</button>
             </form>
         </div>
     </div>

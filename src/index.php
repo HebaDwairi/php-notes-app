@@ -9,6 +9,13 @@ if (isset($_SESSION['message'])) {
     $message = "<p style='color: red;'>{$_SESSION['message']}</p>";
     unset($_SESSION['message']);
 }
+
+$search = $_GET['q'] ?? '';
+$notes = [];
+
+if (!empty($search)) {
+    $search_notes = $notes_repo->search($search);
+}
 ?>
 
 
@@ -21,7 +28,7 @@ if (isset($_SESSION['message'])) {
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-800 text-white">
-    <h1 class="text-2xl font-bold p-4">Notes App</h1>
+    <h1 class="text-2xl font-bold p-4">Notes</h1>
     <div class="flex flex-col lg:flex-row gap-6 p-4 max-w-7xl mx-auto h-4/5">
         <div class=" mx-auto p-6 shadow-md rounded-lg space-y-4 mt-4 bg-slate-700 text-white w-full lg:w-1/3 ">
             <h2 class="text-lg font-bold">Add a Note</h2>
@@ -60,10 +67,19 @@ if (isset($_SESSION['message'])) {
         </div>
         <div class="w-full lg:w-2/3 mx-auto p-6 shadow-md rounded-lg space-y-4 mt-4 bg-slate-700 text-white overflow-y-auto" style="max-height: calc(100vh - 140px);">
             <h2 class="text-lg font-bold">Notes</h2>
+            <form action="index.php" method="get">
+                <div class="border-b border-slate-600 pb-5">
+                  <label>Search Notes:</label>
+                  <input 
+                    type="text"
+                    name="q"
+                    class="border bg-slate-700 border-slate-600 p-2 rounded w-full">
+                </div>
+            </form>
             <ul >
                 <?php
                 try {
-                    $notes = $notes_repo->getAll();
+                    $notes = $search_notes ?? $notes_repo->getAll();
                     foreach ($notes as $note) {
                         echo "<li class='p-2 border-b border-slate-600'>
                                 <div class='flex justify-between items-center'>
@@ -72,13 +88,18 @@ if (isset($_SESSION['message'])) {
                                         <a href='edit_note.php?id={$note->id}' class='pt-2 px-2 text-blue-300 hover:underline text-sm ml-2'>Edit</a>
                                         <form action='delete_note.php' method='POST' class='mt-2'>
                                             <input type='hidden' name='id' value='{$note->id}'>
-                                            <button type='submit' class='bg-red-400 hover:bg-red-500 text-white text-sm font-bold py-1 px-2 rounded-full'>X</button>
+                                            <button 
+                                                type='submit' 
+                                                class='bg-red-400 hover:bg-red-500 text-white text-sm font-bold py-1 px-2 rounded-full'>X</button>
                                         </form>
                                     </div>
                                 </div>
                                 <br>
-                                <span class='text-sm text-slate-400'>" . htmlspecialchars($note->content) . "</span>
+                                <span class='text-sm text-slate-300'>" . htmlspecialchars($note->content) . "</span>
                                 <br>
+                                <br>
+                                <p class='text-xs text-slate-500'>Edited: " . htmlspecialchars($note->updated_at) . "</p>
+                                <p class='text-xs text-slate-500'>Created: " . htmlspecialchars($note->created_at) . "</p>
                               </li>";
                     }
                 } catch (Exception $e) {

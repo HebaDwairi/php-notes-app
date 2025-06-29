@@ -43,8 +43,8 @@ class Database {
     if(self::$pdo == null) {
       $db = new self();
       $db->connect();
-
-      return self::$pdo;
     }
+
+    return self::$pdo;
   }
 }

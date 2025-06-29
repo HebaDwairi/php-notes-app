@@ -6,7 +6,7 @@ require __DIR__ . '/config.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = trim($_POST['title']);
-    $content = trim($_POST['content']);
+    $content = $_POST['content'];
     $author = trim($_POST['author']);
 
     if (empty($title) || empty($content) || empty($author)) {

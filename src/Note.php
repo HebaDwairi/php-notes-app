@@ -87,4 +87,29 @@ class NoteRepository {
     return $notes;
   }
 
+  public function search($query) {
+    $sql = "SELECT * FROM notes 
+            WHERE title LIKE ? OR content LIKE ?
+            ORDER BY updated_at DESC";
+
+    $stmt = $this->pdo->prepare($sql);
+    $search_param = '%'.$query.'%';
+    $stmt->execute([$search_param, $search_param]);
+    
+    $notes = [];
+
+    while($data = $stmt->fetch()) {
+      $notes[] = new Note(
+        $title=$data['title'],
+        $content=$data['content'],
+        $author=$data['author'],
+        $id=$data['id'],
+        $created_at=$data['created_at'],
+        $updated_at=$data['updated_at']
+      );
+    }
+    
+    return $notes;
+  }
+
 }
