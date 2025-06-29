@@ -3,7 +3,7 @@ services:
   web:
     build: .
     volumes:
-      - .:/var/www/html
+      - ./src:/var/www/html
     ports:
       - "8080:80"
     depends_on:
