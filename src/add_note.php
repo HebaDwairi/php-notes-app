@@ -2,14 +2,17 @@
 session_start();
 require __DIR__ . '/config.php';
 
+if (!isset($_SESSION['user_id'])) {
+    header('Location: login.php');
+    exit;
+}
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = trim($_POST['title']);
     $content = $_POST['content'];
-    $author = trim($_POST['author']);
 
-    if (empty($title) || empty($content) || empty($author)) {
+    if (empty($title) || empty($content)) {
         $_SESSION['message'] = 'All fields are required';
         header('Location: index.php');
         exit;
@@ -22,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
 
     try{
-        $note = new Note($title, $content, $author);
+        $note = new Note($title, $content, $_SESSION['user_id']);
         $notes_repo->create($note);
     }
     catch(Exception $e){

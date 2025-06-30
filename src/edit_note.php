@@ -3,6 +3,12 @@
 require __DIR__ . '/config.php';
 
 session_start();
+
+if (!isset($_SESSION['user_id'])) {
+    header('Location: login.php');
+    exit;
+}
+
 $message = null;
 
 if (isset($_SESSION['message'])) {
@@ -78,12 +84,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         class="border bg-slate-700 border-slate-600 p-2 rounded w-full h-32"><?php echo htmlspecialchars($note->content); ?></textarea>
                 </div>
                 <input type="hidden" name="id" value="<?php echo htmlspecialchars($note->id); ?>">
-                <div>
-                    <label for="author">Author:</label>
-                    <p class="border bg-slate-700 border-slate-600 p-2 rounded w-full">
-                        <?php echo htmlspecialchars($note->author); ?>
-                    </p>
-                </div>
                 <?php echo $message ?? null ?>
                 <button
                     type="submit"

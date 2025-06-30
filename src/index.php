@@ -1,8 +1,14 @@
 <?php
+session_start();
 
 require __DIR__ . '/config.php';
 
-session_start();
+
+if (!isset($_SESSION['user_id'])) {
+    header('Location: login.php');
+    exit;
+}
+
 $message = null;
 
 if (isset($_SESSION['message'])) {
@@ -28,7 +34,13 @@ if (!empty($search)) {
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-800 text-white">
-    <h1 class="text-2xl font-bold p-4">Notes</h1>
+    <div class="flex justify-between">
+        <h1 class="text-2xl font-bold p-4 ml-4">Notes</h1>
+        <div class="flex items-center">
+            <h2 class="font-bold text-lg p-6 mr-7"><?php echo"Welcome back {$_SESSION['username']}!" ?></h2>
+            <a href="logout.php" class="bg-slate-600 rounded-lg font-bold text-lg p-2 mr-7 my-5 hover:bg-slate-500">Logout</a>
+        </div>
+    </div>
     <div class="flex flex-col lg:flex-row gap-6 p-4 max-w-7xl mx-auto h-4/5">
         <div class=" mx-auto p-6 shadow-md rounded-lg space-y-4 mt-4 bg-slate-700 text-white w-full lg:w-1/3 ">
             <h2 class="text-lg font-bold">Add a Note</h2>
@@ -50,14 +62,6 @@ if (!empty($search)) {
                     placeholder="Content"
                     required
                     class="border bg-slate-700 border-slate-600 p-2 rounded w-full h-32"></textarea>
-                </div>
-                <div>
-                  <label for="author">Author:</label>
-                  <input type="text"
-                    name="author"
-                    placeholder="Author"
-                    required
-                    class="border bg-slate-700 border-slate-600 p-2 rounded w-full">
                 </div>
                 <?php echo $message ?? null ?>
                 <button
@@ -83,7 +87,7 @@ if (!empty($search)) {
                     foreach ($notes as $note) {
                         echo "<li class='p-2 border-b border-slate-600'>
                                 <div class='flex justify-between items-center'>
-                                    <div><strong>" . htmlspecialchars($note->title) . "</strong> by " . htmlspecialchars($note->author) . "</div>
+                                    <div><strong>" . htmlspecialchars($note->title) . "</strong> by " . htmlspecialchars($note->username) . "</div>
                                     <div class='flex items-center space-x-2 '>
                                         <a href='edit_note.php?id={$note->id}' class='pt-2 px-2 text-blue-300 hover:underline text-sm ml-2'>Edit</a>
                                         <form action='delete_note.php' method='POST' class='mt-2'>
