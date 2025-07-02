@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once __DIR__ . '/session.php';
 require __DIR__ . '/config.php';
 
 if (!isset($_SESSION['user_id'])) {
@@ -12,8 +12,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         if ($id) {
-            $notes_repo->delete($id);
+            $note = $notes_repo->findById($id);
 
+            if($note->user_id == $_SESSION['user_id']) {
+                $notes_repo->delete($id);
+            }
+            else {
+                die("you don't have the permission to delete this note");
+            }
         }
     } 
     catch(Exception $e){

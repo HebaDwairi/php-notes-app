@@ -1,6 +1,5 @@
 <?php
-session_start();
-
+require_once __DIR__ . '/session.php';
 require __DIR__ . '/config.php';
 require __DIR__  . "/User.php";
 
@@ -63,37 +62,37 @@ if($_SERVER['REQUEST_METHOD'] == "POST") {
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-800 text-white">
-  <h1 class="text-2xl font-bold m-6">Notes</h1>
-  <div class="flex flex-col min-h-3/4-screen items-center">
-    <div class="shadow-md rounded-lg p-9 bg-slate-700 text-white mt-15 w-1/4">
+  <?php include 'header.php'; ?>
+  <div class="flex flex-col min-h-3/4-screen items-center mt-10">
+    <div class="shadow-md rounded-lg p-9 bg-slate-700 text-white w-1/4">
       <h1 class="text-2xl font-bold mb-7">Sign Up</h1>
-      <form action="register.php" method="post" class="flex flex-col gap-5">
+      <form action="register.php" method="post" class="flex flex-col gap-4">
         <div>
           <input
             type="text"
             name="username" required
-            class="border bg-slate-700 border-slate-600 p-2 rounded w-full"
+            class="border bg-slate-800/60 border-slate-600 p-3 rounded-lg w-full"
             placeholder="Username">
         </div>
         <div>
           <input
             type="email"
             name="email" required
-            class="border bg-slate-700 border-slate-600 p-2 rounded w-full"
+            class="border bg-slate-800/60 border-slate-600 p-3 rounded-lg w-full"
             placeholder="Email">
         </div>
         <div>
           <input
             type="password"
             name="password" required
-            class="border bg-slate-700 border-slate-600 p-2 rounded w-full"
+            class="border bg-slate-800/60 border-slate-600 p-3 rounded-lg w-full"
             placeholder="Password">
         </div>
         <div>
           <input
             type="password"
             name="confirm_password" required
-            class="border bg-slate-700 border-slate-600 p-2 rounded w-full"
+           class="border bg-slate-800/60 border-slate-600 p-3 rounded-lg w-full"
             placeholder="Confirm Password">
         </div>
         <?php if (!empty($error)): ?>
@@ -103,10 +102,10 @@ if($_SERVER['REQUEST_METHOD'] == "POST") {
         <?php endif; ?>
         <button
           type="submit"
-          class="bg-slate-600 w-full hover:bg-slate-500 text-white font-bold py-2 px-4 rounded mx-auto my-2">Sign Up</button>
+          class="bg-teal-400 w-full hover:bg-teal-300 text-white font-bold py-2 px-4 rounded mx-auto my-2">Sign Up</button>
         <p class="mt-4 text-center text-sm text-slate-400">
           Already have an account? 
-          <a href="login.php" class="text-blue-300 hover:underline">Login</a>
+          <a href="login.php" class="text-teal-300 hover:underline">Login</a>
         </p>
       </form>
     </div>
