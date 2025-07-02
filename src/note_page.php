@@ -4,11 +4,6 @@ require __DIR__ . '/config.php';
 require __DIR__  . "/User.php";
 
 
-if (!isset($_SESSION['user_id'])) {
-    header('Location: login.php');
-    exit;
-}
-
 if (isset($_GET['slug'])) {
     $note = $notes_repo->findBySlug($_GET['slug']);
 }
@@ -36,7 +31,7 @@ else {
                     <h2 class="text-lg font-bold"><?= $note->title ?></h2>
                     <p class=' text-slate-400 mt-5 '>By: <?= $note->username ?></p>
                 </div>
-                <?php if($note->user_id == $_SESSION['user_id']): ?>
+                <?php if(isset($_SESSION['user_id']) && ($note->user_id == $_SESSION['user_id'])): ?>
                     <div class='flex  space-x-2 '>
                     <a href='edit_note.php?id=<?= $note->id?>' class='pt-3 px-2 text-blue-300 hover:underline  ml-2'>Edit</a>
                     <form action='delete_note.php' method='POST' class='mt-2'>
@@ -49,7 +44,9 @@ else {
                 <?php endif;?>
             </div>
             <div>
-                <img src="<?= htmlspecialchars($note->image_path) ?>" alt="cant display">
+                <?php if(!empty($note->image_path)): ?>
+                    <img src="<?= htmlspecialchars($note->image_path) ?>" class="max-w-full max-h-96 object-contain">
+                <? endif; ?>
                 <div class=" whitespace-pre-line">
                     <?= $note->content ?>
                 </div>

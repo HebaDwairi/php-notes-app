@@ -47,7 +47,7 @@ class NoteRepository {
 
     $sql = "UPDATE notes SET title = ?, content = ?, updated_at = NOW(), slug = ?, image_path = ? WHERE id = ?";
     $stmt = $this->pdo->prepare($sql);
-    $stmt->execute([$note->title, $note->content, $note->slug, $note->image_path] , $note->id);
+    $stmt->execute([$note->title, $note->content, $note->slug, $note->image_path , $note->id]);
   }
 
   public function delete($id) {
@@ -84,6 +84,37 @@ class NoteRepository {
     }
     
     return null;
+  }
+
+  public function findByUser($user_id) {
+    $sql = "SELECT notes.*, users.username
+            FROM notes 
+            JOIN users ON notes.user_id = users.id
+            WHERE notes.user_id = ?
+            ORDER BY notes.updated_at DESC";
+    
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->execute([$user_id]);
+    
+    $notes = [];
+
+    while($data = $stmt->fetch()) {
+      $note = new Note(
+        $data['title'],
+        $data['content'],
+        $data['user_id'],
+        $data['id'],
+        $data['created_at'],
+        $data['updated_at'],
+        $data['slug'],
+        $data['image_path']
+      );
+
+      $note->username = $data['username'];
+      $notes[] = $note;
+    }
+    
+    return $notes;
   }
 
   public function findBySlug($slug) {

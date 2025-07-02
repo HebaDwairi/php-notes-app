@@ -3,10 +3,6 @@ require_once __DIR__ . '/session.php';
 require __DIR__ . '/config.php';
 
 
-if (!isset($_SESSION['user_id'])) {
-    header('Location: login.php');
-    exit;
-}
 
 $message = null;
 
@@ -51,64 +47,7 @@ if (!empty($search)) {
 <body class="bg-slate-800 text-slate-300 min-h-screen">
 
     <?php include 'header.php'; ?>
-
-
-    <div class="mx-auto max-w-7xl p-8">
-        <div class="flex flex-col lg:flex-row gap-8 ">
-        
-
-
-            <div class=" mx-auto p-6 shadow-md rounded-xl space-y-4 bg-slate-700 text-slate-300 w-full lg:w-1/3 lg:sticky lg:top-24 self-start">
-                <h2 class="text-xl font-bold">Add a Note</h2>
-                <form action="add_note.php" 
-                      method="POST" 
-                      class="flex flex-col space-between h-full space-y-4"
-                      enctype="multipart/form-data">
-                    <div class="space-y-4">
-                        <div>
-                        
-                        <input
-                            type="text"
-                            name="title"
-                            placeholder="Title"
-                            required
-                            maxlength="255"
-                            class="border bg-slate-800/60 border-slate-600 p-3 rounded-xl w-full">
-                        </div>
-                        
-                        <div>
-                        
-                        <textarea
-                            name="content"
-                            placeholder="Content"
-                            required
-                            class="border bg-slate-800/60 border-slate-600 p-3 rounded-xl w-full h-40"></textarea>
-                        </div>
-
-                        <div >
-                            <label for="image"class="block text-sm text-slate-400 mb-1">Image:</label>
-                            <input type="file" name="image" accept="image/*"  
-                               class="block w-full text-sm text-slate-300 file:mr-4 file:py-1 file:px-2
-                                    file:rounded-lg file:border-0
-                                    file:bg-accent hover:file:bg-accent-hover">
-                        </div>
-                        
-                        <?php echo $message ?? null ?>
-                    </div>
-                
-                    <button
-                    type="submit"
-                    class="bg-accent hover:bg-accent-hover text-slate-800 font-bold py-3 px-4 rounded-xl transition-colors w-full ">Add Note</button>
-                </form>
-            </div>
-
-
-
-
-
-            <div class="w-full lg:w-2/3 p-6 shadow-md rounded-xl bg-slate-700 space-y-4 ">
-                <h2 class="text-xl font-bold">Your Notes</h2>
-                <form action="index.php" method="get">
+    <form action="index.php" method="get">
                     <div class="relative">
                         <input
                             type="text"
@@ -123,6 +62,13 @@ if (!empty($search)) {
                         </svg>
                     </div>
                 </form>
+
+    <div class="mx-auto max-w-7xl p-8">
+        <div class="flex justify-center ">
+        
+            <div class="w-full lg:w-2/3 p-6 shadow-md rounded-xl bg-slate-700 space-y-4 ">
+                <h2 class="text-xl font-bold">Your Notes</h2>
+                
                 <ul class="space-y-4">
                     <?php
                     try {
@@ -141,18 +87,7 @@ if (!empty($search)) {
                                             </strong> by <?=  htmlspecialchars($note->username) ?>
                                         </div>
                                         
-                                    </a>
-                                        <?php if($note->user_id == $_SESSION['user_id']): ?>
-                                            <div class='flex items-center space-x-2 '>
-                                            <a href='edit_note.php?id=<?= $note->id ?>' class='pt-2 font-bold px-2 text-teal-300 hover:underline text-sm ml-2'>Edit</a>
-                                            <form action='delete_note.php' method='POST' class='mt-2'>
-                                                <input type='hidden' name='id' value=<?= $note->id ?>>
-                                                <button
-                                                type='submit'
-                                                class='bg-red-400 hover:bg-red-500 text-white text-sm py-1 px-2 rounded-full'>Delete</button>
-                                            </form>
-                                        </div>
-                                        <?php endif;?>
+
                                     </div>
                                     <p class='text-sm text-slate-300 p-4'>
                                         <?= htmlspecialchars(mb_substr($note->content, 0, 200) . (mb_strlen($note->content) > 200 ? '...' : '')) ?>
@@ -161,7 +96,7 @@ if (!empty($search)) {
                                         <p class='text-xs text-slate-500'>Edited: <?= htmlspecialchars($note->updated_at) ?></p>
                                         <p class='text-xs text-slate-500'>Created: <?= htmlspecialchars($note->created_at) ?></p>
                                     </div>
-                                
+                                </a>
                             </li>
                         <?php endforeach;
                     } 

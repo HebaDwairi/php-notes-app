@@ -4,6 +4,7 @@
             <a href="index.php">
               <h1 class="text-3xl font-black p-2 ml-4">Notes</h1>
             </a>
+            
             <?php if(isset($_SESSION['user_id'])):?>
               <div class="flex items-center">
                   <h2 class="font-bold text-lg p-2 mr-7"><?php echo"Welcome back {$_SESSION['username']}!" ?></h2>

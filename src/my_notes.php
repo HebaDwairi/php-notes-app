@@ -126,7 +126,7 @@ if (!empty($search)) {
                 <ul class="space-y-4">
                     <?php
                     try {
-                        $notes = $search_notes ?? $notes_repo->getAll();
+                        $notes = $search_notes ?? $notes_repo->findByUser($_SESSION['user_id']);
                         foreach ($notes as $note): ?>
                             <li class='bg-slate-800/50 rounded-xl border border-transparent hover:text-accent hover:border-accent transition-colors duration-300 group overflow-hidden'>
                                 <a href="note_page.php?slug=<?= $note->slug ?> " class="block ">
