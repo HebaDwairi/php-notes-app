@@ -25,7 +25,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = $_POST['id'];
     require __DIR__ . '/process_note_form.php';
     
-
     try{
         $old_note = $notes_repo->findById($id);
 
@@ -55,10 +54,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notes</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tiny.cloud/1/9kxz2wr0h6q5fm3aw7fas6b73nhrzr7pl2hvp2fiyaar3ux0/tinymce/6/tinymce.min.js"></script>
+    <script>
+    tinymce.init({
+        selector: 'textarea[name="content"]',
+        plugins: 'link image lists table',
+        toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright | bullist numlist outdent indent',
+        content_style: "body { background-color: #1E293B; color:white;}",
+        skin: 'oxide-dark',
+        content_css: 'dark',
+    });
+    </script>
+    
+
 </head>
 <body class="bg-slate-800 text-white">
     <?php include 'header.php'; ?>

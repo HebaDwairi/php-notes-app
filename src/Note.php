@@ -194,4 +194,80 @@ class NoteRepository {
     }
   }
 
+  public function getOlderThan($timestamp=null, $limit=10) {
+    $notes = [];
+
+    if($timestamp) {
+      $sql = "SELECT notes.*, users.username
+              FROM notes
+              JOIN notes ON users notes.user_id = users.id
+              WHERE notes.updated_at < ?
+              ORDER BY notes.updated_at
+              LIMIT ?";
+      
+      $stmt = $this->pdo->prepare($sql);
+      $stmt->execute([$timestamp, $limit]);
+
+      while($data = $stmt->fetch()) {
+        $note = $this->note_from_db_row($data);
+        $notes[] = $note;
+      }
+    }
+    else {
+      $sql = "SELECT notes.*, users.username
+              FROM notes
+              JOIN users ON notes notes.user_id = users.id
+              ORDER BY notes.updated_at DESC
+              LIMIT ?";
+      
+      $stmt = $this->pdo->prepare($sql);
+      $stmt->execute([$limit]);
+
+      while($data = $stmt->fetch()) {
+        $note = $this->note_from_db_row($data);
+        $notes[] = $note;
+      }
+    }
+
+    return $notes;
+  }
+
+  public function getOlderThanByUser($user_id, $timestamp=null, $limit=10) {
+    $notes = [];
+
+    if($timestamp) {
+      $sql = "SELECT notes.*, users.username
+              FROM notes
+              JOIN users ON notes notes.user_id = users.id
+              WHERE notes.user_id = ? AND notes.updated_at < ? 
+              ORDER BY notes.updated_at DESC
+              LIMIT ?";
+      
+      $stmt = $this->pdo->prepare($sql);
+      $stmt->execute([$timestamp, $user_id, $limit]);
+
+      while($data = $stmt->fetch()) {
+        $note = $this->note_from_db_row($data);
+        $notes[] = $note;
+      }
+    }
+    else {
+      $sql = "SELECT notes.*, users.username
+              FROM notes
+              JOIN notes ON users notes.user_id = users.id
+              WHERE notes.user_id = ?
+              ORDER BY notes.updated_at
+              LIMIT ?";
+      
+      $stmt = $this->pdo->prepare($sql);
+      $stmt->execute([$user_id, $limit]);
+
+      while($data = $stmt->fetch()) {
+        $note = $this->note_from_db_row($data);
+        $notes[] = $note;
+      }
+    }
+
+    return $notes;
+  }
 }

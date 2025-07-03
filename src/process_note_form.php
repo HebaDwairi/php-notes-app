@@ -4,6 +4,14 @@ $title = trim($_POST['title']);
 $content = $_POST['content'];
 $image_path = null;
 
+$maxPostSize = 1024 * 1024 * 8;
+
+if(isset($_SERVER['CONTENT_LENGTH']) && $_SERVER['CONTENT_LENGTH'] > $maxPostSize) {
+    $_SESSION['message'] = 'File is too large';
+    header('Location: my_notes.php');
+    exit;
+}
+
 if (empty($title) || empty($content)) {
     $_SESSION['message'] = 'All fields are required';
     header('Location: my_notes.php');
@@ -15,6 +23,7 @@ if (strlen($title) > 255) {
     exit;
 }
 if(!empty($_FILES['image']['name'])) {
+
     $finfo = finfo_open(FILEINFO_MIME_TYPE);
     $mimeType = finfo_file($finfo, $_FILES['image']['tmp_name']);
     finfo_close($finfo);

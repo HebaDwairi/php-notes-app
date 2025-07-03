@@ -21,6 +21,23 @@ else {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notes</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+    .note-content ul {
+        list-style-type: disc;
+        padding-left: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .note-content ol {
+        list-style-type: decimal;
+        padding-left: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .note-content li {
+        margin-bottom: 0.25rem;
+    }
+</style>
 </head>
 <body class="bg-slate-800 text-slate-300 min-h-screen">
     <?php include 'header.php'; ?>
@@ -32,7 +49,7 @@ else {
                     <p class=' text-slate-400 mt-5 '>By: <?= $note->username ?></p>
                 </div>
                 <?php if(isset($_SESSION['user_id']) && ($note->user_id == $_SESSION['user_id'])): ?>
-                    <div class='flex  space-x-2 '>
+                    <div class='flex space-x-2 '>
                     <a href='edit_note.php?id=<?= $note->id?>' class='pt-3 px-2 text-blue-300 hover:underline  ml-2'>Edit</a>
                     <form action='delete_note.php' method='POST' class='mt-2'>
                         <input type='hidden' name='id' value=<?= $note->id ?>>
@@ -47,7 +64,7 @@ else {
                 <?php if(!empty($note->image_path)): ?>
                     <img src="<?= htmlspecialchars($note->image_path) ?>" class="max-w-full object-contain rounded-xl">
                 <? endif; ?>
-                <div class=" whitespace-pre-line">
+                <div class="note-content">
                     <?= $note->content ?>
                 </div>
 

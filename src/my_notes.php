@@ -21,6 +21,15 @@ $notes = [];
 if (!empty($search)) {
     $search_notes = $notes_repo->search($search);
 }
+
+function previewHTML($html, $limit = 200) {
+    $text = strip_tags($html);
+    $text = html_entity_decode($text, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    $text = preg_replace('/\s+/', ' ', $text);
+    $text = trim(mb_substr($text, 0, $limit));
+    return htmlspecialchars($text);
+}
+
 ?>
 
 
@@ -32,6 +41,18 @@ if (!empty($search)) {
     <title>Notes App</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tiny.cloud/1/9kxz2wr0h6q5fm3aw7fas6b73nhrzr7pl2hvp2fiyaar3ux0/tinymce/6/tinymce.min.js"></script>
+    <script>
+    tinymce.init({
+        selector: 'textarea[name="content"]',
+        plugins: 'link image lists table',
+        toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright | bullist numlist outdent indent',
+        content_style: "body { background-color: #1E293B; color:white;}",
+        skin: 'oxide-dark',
+        content_css: 'dark',
+        height: 200
+    });
+    </script>
     <script>
     tailwind.config = {
         theme: {
@@ -56,9 +77,7 @@ if (!empty($search)) {
     <div class="mx-auto max-w-7xl p-8">
         <div class="flex flex-col lg:flex-row gap-8 ">
         
-
-
-            <div class=" mx-auto p-6 shadow-md rounded-xl space-y-4 bg-slate-700 text-slate-300 w-full lg:w-1/3 lg:sticky lg:top-[5.35rem] self-start">
+            <div class="resize-x overflow-auto mx-auto p-6 shadow-md rounded-xl space-y-4 bg-slate-700 text-slate-300 w-full lg:w-1/3 lg:sticky lg:top-[5.35rem] self-start">
                 <h2 class="text-xl font-bold">Add a Note</h2>
                 <form action="add_note.php" 
                       method="POST" 
@@ -81,7 +100,6 @@ if (!empty($search)) {
                         <textarea
                             name="content"
                             placeholder="Content"
-                            required
                             class="border bg-slate-800/60 border-slate-600 p-3 rounded-xl w-full h-40"></textarea>
                         </div>
 
@@ -104,7 +122,7 @@ if (!empty($search)) {
 
 
 
-            <div class="w-full lg:w-2/3 p-6 shadow-md rounded-xl bg-slate-700 space-y-4 ">
+            <div class="flex-1 w-full lg:w-2/3 p-6 shadow-md rounded-xl bg-slate-700 space-y-4 ">
                 <h2 class="text-xl font-bold">Your Notes</h2>
                 <ul class="space-y-4">
                     <?php
@@ -126,18 +144,20 @@ if (!empty($search)) {
                                     </a>
                                         <?php if($note->user_id == $_SESSION['user_id']): ?>
                                             <div class='flex items-center space-x-2 '>
-                                            <a href='edit_note.php?id=<?= $note->id ?>' class='pt-2 font-bold px-2 text-teal-300 hover:underline text-sm ml-2'>Edit</a>
-                                            <form action='delete_note.php' method='POST' class='mt-2'>
-                                                <input type='hidden' name='id' value=<?= $note->id ?>>
-                                                <button
-                                                type='submit'
-                                                class='bg-red-400 hover:bg-red-500 text-white text-sm py-1 px-2 rounded-full'>Delete</button>
-                                            </form>
-                                        </div>
+                                                <a href='edit_note.php?id=<?= $note->id ?>' class='pt-2 font-bold px-2 text-teal-300 hover:underline text-sm ml-2'>Edit</a>
+                                                <form action='delete_note.php' method='POST' class='mt-2'>
+                                                    <input type='hidden' name='id' value=<?= $note->id ?>>
+                                                    <button
+                                                    type='submit'
+                                                    class='bg-red-400 hover:bg-red-500 text-white text-sm py-1 px-2 rounded-full'>Delete</button>
+                                                </form>
+                                            </div>
                                         <?php endif;?>
                                     </div>
                                     <p class='text-sm text-slate-300 p-4'>
-                                        <?= htmlspecialchars(mb_substr($note->content, 0, 200) . (mb_strlen($note->content) > 200 ? '...' : '')) ?>
+                                        <?php
+                                          echo  previewHTML($note->content)
+                                        ?>
                                     </p>
                                     <div class="flex justify-between items-center mt-5 px-4 pb-4">
                                         <p class='text-xs text-slate-500'>Edited: <?= htmlspecialchars($note->updated_at) ?></p>
