@@ -26,5 +26,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['message'] = 'Failed to delete note' . $e->getMessage() . $id;
     }
 
-    header('Location: index.php');
+    header('Location: my_notes.php');
 }

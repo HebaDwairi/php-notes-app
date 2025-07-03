@@ -33,6 +33,23 @@ class NoteRepository {
     $this->pdo = Database::getInstance();
   }
 
+  private function note_from_db_row($data) {
+    $note = new Note(
+        $data['title'],
+        $data['content'],
+        $data['user_id'],
+        $data['id'],
+        $data['created_at'],
+        $data['updated_at'],
+        $data['slug'],
+        $data['image_path']
+      );
+
+    $note->username = $data['username'];
+
+    return $note;
+  }
+
   public function create(Note $note) {
     $note->slug = $this->create_slug($note->title);
 
@@ -68,18 +85,7 @@ class NoteRepository {
     $data = $stmt->fetch();
     
     if ($data) {
-      $note = new Note(
-        $title=$data['title'],
-        $content=$data['content'],
-        $user_id=$data['user_id'],
-        $id=$data['id'],
-        $created_at=$data['created_at'],
-        $updated_at=$data['updated_at'],
-        $slug=$data['slug'],
-        $image_path=$data['image_path']
-      );
-
-      $note->username = $data['username'];
+      $note = $this->note_from_db_row($data);
       return $note;
     }
     
@@ -99,18 +105,7 @@ class NoteRepository {
     $notes = [];
 
     while($data = $stmt->fetch()) {
-      $note = new Note(
-        $data['title'],
-        $data['content'],
-        $data['user_id'],
-        $data['id'],
-        $data['created_at'],
-        $data['updated_at'],
-        $data['slug'],
-        $data['image_path']
-      );
-
-      $note->username = $data['username'];
+      $note = $this->note_from_db_row($data);
       $notes[] = $note;
     }
     
@@ -129,18 +124,7 @@ class NoteRepository {
     
     
     if ($data) {
-      $note = new Note(
-        $title=$data['title'],
-        $content=$data['content'],
-        $user_id=$data['user_id'],
-        $id=$data['id'],
-        $created_at=$data['created_at'],
-        $updated_at=$data['updated_at'],
-        $slug=$data['slug'],
-        $image_path=$data['image_path']
-      );
-
-      $note->username = $data['username'];
+      $note = $this->note_from_db_row($data);
       return $note;
     }
     
@@ -159,18 +143,7 @@ class NoteRepository {
     $notes = [];
 
     while($data = $stmt->fetch()) {
-      $note = new Note(
-        $data['title'],
-        $data['content'],
-        $data['user_id'],
-        $data['id'],
-        $data['created_at'],
-        $data['updated_at'],
-        $data['slug'],
-        $data['image_path']
-      );
-
-      $note->username = $data['username'];
+      $note = $this->note_from_db_row($data);
       $notes[] = $note;
     }
     
@@ -191,18 +164,7 @@ class NoteRepository {
     $notes = [];
 
     while($data = $stmt->fetch()) {
-      $note = new Note(
-        $data['title'],
-        $data['content'],
-        $data['user_id'],
-        $data['id'],
-        $data['created_at'],
-        $data['updated_at'],
-        $data['slug'],
-        $data['image_path']
-      );
-
-      $note->username = $data['username'];
+      $note = $this->note_from_db_row($data);
       $notes[] = $note;
     }
     

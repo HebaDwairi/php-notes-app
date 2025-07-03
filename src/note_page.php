@@ -45,7 +45,7 @@ else {
             </div>
             <div>
                 <?php if(!empty($note->image_path)): ?>
-                    <img src="<?= htmlspecialchars($note->image_path) ?>" class="max-w-full max-h-96 object-contain">
+                    <img src="<?= htmlspecialchars($note->image_path) ?>" class="max-w-full object-contain rounded-xl">
                 <? endif; ?>
                 <div class=" whitespace-pre-line">
                     <?= $note->content ?>

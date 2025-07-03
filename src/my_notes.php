@@ -58,7 +58,7 @@ if (!empty($search)) {
         
 
 
-            <div class=" mx-auto p-6 shadow-md rounded-xl space-y-4 bg-slate-700 text-slate-300 w-full lg:w-1/3 lg:sticky lg:top-24 self-start">
+            <div class=" mx-auto p-6 shadow-md rounded-xl space-y-4 bg-slate-700 text-slate-300 w-full lg:w-1/3 lg:sticky lg:top-[5.35rem] self-start">
                 <h2 class="text-xl font-bold">Add a Note</h2>
                 <form action="add_note.php" 
                       method="POST" 
@@ -104,25 +104,8 @@ if (!empty($search)) {
 
 
 
-
-
             <div class="w-full lg:w-2/3 p-6 shadow-md rounded-xl bg-slate-700 space-y-4 ">
                 <h2 class="text-xl font-bold">Your Notes</h2>
-                <form action="index.php" method="get">
-                    <div class="relative">
-                        <input
-                            type="text"
-                            name="q"
-                            value="<?= htmlspecialchars($search) ?>"
-                            placeholder="Search your notes..."
-                            class="bg-slate-800/60 border bg-slate-800 border-slate-600 p-3 pl-10 rounded-xl w-full">
-                        <svg class="w-5 h-5 text-slate-400 absolute top-1/2 left-3 transform -translate-y-1/2" 
-                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                        </svg>
-                    </div>
-                </form>
                 <ul class="space-y-4">
                     <?php
                     try {
@@ -140,7 +123,6 @@ if (!empty($search)) {
                                             <strong> <?= htmlspecialchars($note->title) ?>
                                             </strong> by <?=  htmlspecialchars($note->username) ?>
                                         </div>
-                                        
                                     </a>
                                         <?php if($note->user_id == $_SESSION['user_id']): ?>
                                             <div class='flex items-center space-x-2 '>
