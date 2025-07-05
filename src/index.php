@@ -17,7 +17,15 @@ $notes = [];
 if (!empty($search)) {
     $search_notes = $notes_repo->search($search);
 }
+function previewHTML($html, $limit = 200) {
+    $text = strip_tags($html);
+    $text = html_entity_decode($text, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    $text = preg_replace('/\s+/', ' ', $text);
+    $text = trim(mb_substr($text, 0, $limit));
+    return htmlspecialchars($text);
+}
 ?>
+
 
 
 <!DOCTYPE html>
@@ -44,22 +52,25 @@ if (!empty($search)) {
     }
 </script>
 </head>
-<body class="bg-slate-800 text-slate-300 min-h-screen">
+<body class="bg-slate-800 text-slate-300 min-h-screen" data-page="home">
 
     <?php include 'header.php'; ?>
 
     <div class="mx-auto max-w-7xl p-8">
         <div class="flex justify-center ">
         
-            <div class="w-full lg:w-2/3 p-6 shadow-md rounded-xl bg-slate-700 space-y-4 ">
+            <div class="flex flex-col w-full lg:w-2/3 p-6 shadow-md rounded-xl bg-slate-700 space-y-4 ">
                 <h2 class="text-xl font-bold">Latest Notes</h2>
                 
-                <ul class="space-y-4">
+                <ul class="space-y-4 " id="notes-list">
                     <?php
                     try {
-                        $notes = $search_notes ?? $notes_repo->getAll();
+                        $notes = $search_notes ?? $notes_repo->getOlderThan(null, null, 10);
                         foreach ($notes as $note): ?>
-                            <li class='bg-slate-800/50 rounded-xl border border-transparent hover:text-accent hover:border-accent transition-colors duration-300 group overflow-hidden'>
+                            <li class='bg-slate-800/50 rounded-xl border border-transparent hover:text-accent hover:border-accent transition-colors duration-300 group overflow-hidden'
+                            data-id="<?= $note->id ?>" 
+                            data-updated-at="<?= $note->updated_at ?>">
+
                                 <a href="note_page.php?slug=<?= $note->slug ?> " class="block ">
                                     <?php if (!empty($note->image_path)): ?>
                                         <img src="<?= htmlspecialchars($note->image_path) ?>" 
@@ -75,7 +86,9 @@ if (!empty($search)) {
 
                                     </div>
                                     <p class='text-sm text-slate-300 p-4'>
-                                        <?= htmlspecialchars(mb_substr($note->content, 0, 200) . (mb_strlen($note->content) > 200 ? '...' : '')) ?>
+                                       <?php
+                                          echo  previewHTML($note->content)
+                                        ?>
                                     </p>
                                     <div class="flex justify-between items-center mt-5 px-4 pb-4">
                                         <p class='text-xs text-slate-500'>Edited: <?= htmlspecialchars($note->updated_at) ?></p>
@@ -89,11 +102,16 @@ if (!empty($search)) {
                         echo "<li>Error fetching notes: {$e->getMessage()}</li>";
                     }
                     ?>
+                   
                 </ul>
+                 <button 
+                   id="load-more-btn" 
+                    class="bg-accent hover:bg-accent-hover text-slate-800 py-2 px-3 rounded-xl transition-colors mx-auto "
+                   >Load More</button>
             </div>
         </div>
     </div>
 
-    
+<script src="loadMore.js?v=<?= time() ?>" defer></script>
 </body>
 </html>

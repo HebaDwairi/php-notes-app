@@ -194,80 +194,63 @@ class NoteRepository {
     }
   }
 
-  public function getOlderThan($timestamp=null, $limit=10) {
+  public function getOlderThan($updatedAt = null, $id = null, $limit = 10) {
     $notes = [];
+    $params = [];
+    $sql = "SELECT notes.*, users.username
+            FROM notes
+            JOIN users ON notes.user_id = users.id";
 
-    if($timestamp) {
-      $sql = "SELECT notes.*, users.username
-              FROM notes
-              JOIN notes ON users notes.user_id = users.id
-              WHERE notes.updated_at < ?
-              ORDER BY notes.updated_at
-              LIMIT ?";
-      
-      $stmt = $this->pdo->prepare($sql);
-      $stmt->execute([$timestamp, $limit]);
-
-      while($data = $stmt->fetch()) {
-        $note = $this->note_from_db_row($data);
-        $notes[] = $note;
-      }
+    if ($updatedAt !== null && $id !== null) {
+        $sql .= " WHERE (notes.updated_at < ?)
+                  OR (notes.updated_at = ? AND notes.id < ?)";
+        $params = [$updatedAt, $updatedAt, $id];
     }
-    else {
-      $sql = "SELECT notes.*, users.username
-              FROM notes
-              JOIN users ON notes notes.user_id = users.id
-              ORDER BY notes.updated_at DESC
-              LIMIT ?";
-      
-      $stmt = $this->pdo->prepare($sql);
-      $stmt->execute([$limit]);
 
-      while($data = $stmt->fetch()) {
-        $note = $this->note_from_db_row($data);
-        $notes[] = $note;
-      }
+    $sql .= " ORDER BY notes.updated_at DESC, notes.id DESC
+              LIMIT ?";
+    $params[] = $limit;
+
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->execute($params);
+
+    while ($data = $stmt->fetch()) {
+        $notes[] = $this->note_from_db_row($data);
     }
 
     return $notes;
-  }
+}
 
-  public function getOlderThanByUser($user_id, $timestamp=null, $limit=10) {
+
+  public function getOlderThanByUser($user_id, $updatedAt = null, $id = null, $limit = 10) {
     $notes = [];
+    $params = [$user_id];
+    $sql = "SELECT notes.*, users.username
+            FROM notes
+            JOIN users ON notes.user_id = users.id
+            WHERE notes.user_id = ?";
 
-    if($timestamp) {
-      $sql = "SELECT notes.*, users.username
-              FROM notes
-              JOIN users ON notes notes.user_id = users.id
-              WHERE notes.user_id = ? AND notes.updated_at < ? 
-              ORDER BY notes.updated_at DESC
-              LIMIT ?";
-      
-      $stmt = $this->pdo->prepare($sql);
-      $stmt->execute([$timestamp, $user_id, $limit]);
-
-      while($data = $stmt->fetch()) {
-        $note = $this->note_from_db_row($data);
-        $notes[] = $note;
-      }
+    if ($updatedAt !== null && $id !== null) {
+        $sql .= " AND ((notes.updated_at < ?)
+                  OR (notes.updated_at = ? AND notes.id < ?))";
+        $params[] = $updatedAt;
+        $params[] = $updatedAt;
+        $params[] = $id;
     }
-    else {
-      $sql = "SELECT notes.*, users.username
-              FROM notes
-              JOIN notes ON users notes.user_id = users.id
-              WHERE notes.user_id = ?
-              ORDER BY notes.updated_at
-              LIMIT ?";
-      
-      $stmt = $this->pdo->prepare($sql);
-      $stmt->execute([$user_id, $limit]);
 
-      while($data = $stmt->fetch()) {
-        $note = $this->note_from_db_row($data);
-        $notes[] = $note;
-      }
+    $sql .= " ORDER BY notes.updated_at DESC, notes.id DESC
+              LIMIT ?";
+    $params[] = $limit;
+
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->execute($params);
+
+    while ($data = $stmt->fetch()) {
+        $notes[] = $this->note_from_db_row($data);
     }
 
     return $notes;
+
+    
   }
 }

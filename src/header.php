@@ -31,7 +31,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
             <?php if(isset($_SESSION['user_id'])):?>
             <div class="flex items-center justify-end gap-x-4 w-1/2 pr-4 ">
                 <span class="text-lg font-semibold text-slate-300">
-                    Hi <?= htmlspecialchars($_SESSION['username']) ?>!
+                    Hi, <?= htmlspecialchars($_SESSION['username']) ?>!
                 </span>
 
                 <a href="my_notes.php"

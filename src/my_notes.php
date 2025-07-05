@@ -45,12 +45,13 @@ function previewHTML($html, $limit = 200) {
     <script>
     tinymce.init({
         selector: 'textarea[name="content"]',
-        plugins: 'link image lists table',
-        toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright | bullist numlist outdent indent',
+        plugins: 'image lists',
+        toolbar: 'undo redo | formatselect | bold italic | fontsizeselect | forecolor backcolor | alignleft aligncenter alignright | bullist numlist',
         content_style: "body { background-color: #1E293B; color:white;}",
         skin: 'oxide-dark',
         content_css: 'dark',
-        height: 200
+        menubar: false,
+        height: 250
     });
     </script>
     <script>
@@ -69,7 +70,7 @@ function previewHTML($html, $limit = 200) {
     }
 </script>
 </head>
-<body class="bg-slate-800 text-slate-300 min-h-screen">
+<body class="bg-slate-800 text-slate-300 min-h-screen" data-page="my-notes">
 
     <?php include 'header.php'; ?>
 
@@ -77,7 +78,7 @@ function previewHTML($html, $limit = 200) {
     <div class="mx-auto max-w-7xl p-8">
         <div class="flex flex-col lg:flex-row gap-8 ">
         
-            <div class="resize-x overflow-auto mx-auto p-6 shadow-md rounded-xl space-y-4 bg-slate-700 text-slate-300 w-full lg:w-1/3 lg:sticky lg:top-[5.35rem] self-start">
+            <div class="resize-x overflow-auto mx-auto p-6 shadow-md rounded-xl space-y-4 bg-slate-700 text-slate-300 w-full lg:w-2/5 lg:sticky lg:top-[5.35rem] self-start">
                 <h2 class="text-xl font-bold">Add a Note</h2>
                 <form action="add_note.php" 
                       method="POST" 
@@ -100,7 +101,7 @@ function previewHTML($html, $limit = 200) {
                         <textarea
                             name="content"
                             placeholder="Content"
-                            class="border bg-slate-800/60 border-slate-600 p-3 rounded-xl w-full h-40"></textarea>
+                            class="border bg-slate-800/60 border-slate-600 p-3 rounded-xl w-full h-50"></textarea>
                         </div>
 
                         <div >
@@ -122,14 +123,20 @@ function previewHTML($html, $limit = 200) {
 
 
 
-            <div class="flex-1 w-full lg:w-2/3 p-6 shadow-md rounded-xl bg-slate-700 space-y-4 ">
+            <div class="flex-1 w-full lg:w-3/5 p-6 shadow-md rounded-xl bg-slate-700 space-y-4 flex flex-col ">
                 <h2 class="text-xl font-bold">Your Notes</h2>
-                <ul class="space-y-4">
+                <p id="no-notes-message" class="text-center text-slate-400 hidden font-bold p-28 text-lg">
+                You have no notes yet.
+                </p>
+                <ul class="space-y-4 " id="notes-list">
                     <?php
                     try {
-                        $notes = $search_notes ?? $notes_repo->findByUser($_SESSION['user_id']);
+                        $notes = $search_notes ?? $notes_repo->getOlderThanByUser($_SESSION['user_id'], null, null, 10);
                         foreach ($notes as $note): ?>
-                            <li class='bg-slate-800/50 rounded-xl border border-transparent hover:text-accent hover:border-accent transition-colors duration-300 group overflow-hidden'>
+                            <li class='bg-slate-800/50 rounded-xl border border-transparent hover:text-accent hover:border-accent 
+                                       transition-colors duration-300 group overflow-hidden'
+                                data-id="<?= $note->id ?>" 
+                                data-updated-at="<?= $note->updated_at ?>">
                                 <a href="note_page.php?slug=<?= $note->slug ?> " class="block ">
                                     <?php if (!empty($note->image_path)): ?>
                                         <img src="<?= htmlspecialchars($note->image_path) ?>" 
@@ -166,18 +173,23 @@ function previewHTML($html, $limit = 200) {
                                 
                             </li>
                         <?php endforeach;
+                        
                     } 
                     catch (Exception $e) {
                         echo "<li>Error fetching notes: {$e->getMessage()}</li>";
                     }
                     ?>
                 </ul>
+                <button 
+                   id="load-more-btn" 
+                    class="bg-accent hover:bg-accent-hover text-slate-800 py-2 px-3 rounded-xl transition-colors mx-auto "
+                   >Load More</button>
             </div>
         </div>
     </div>
 
 
+    <script src="loadMore.js?v=<?= time() ?>" defer></script>
 
-    
 </body>
 </html>
