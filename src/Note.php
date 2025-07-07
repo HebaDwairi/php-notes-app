@@ -8,6 +8,7 @@ class Note {
   public $created_at;
   public $updated_at;
   public $username;
+  public $likes;
   public $slug;
   public $image_path;
 
@@ -46,6 +47,7 @@ class NoteRepository {
       );
 
     $note->username = $data['username'];
+    $note->likes = $data['likes']?? 0;
 
     return $note;
   }
@@ -114,6 +116,12 @@ class NoteRepository {
 
   public function findBySlug($slug) {
     $sql = "SELECT notes.*, users.username
+            FROM notes 
+            JOIN users ON notes.user_id = users.id
+            WHERE notes.slug = ?";
+
+    $sql = "SELECT notes.*, users.username, 
+            (SELECT count(*) FROM likes WHERE note_id = notes.id) as likes
             FROM notes 
             JOIN users ON notes.user_id = users.id
             WHERE notes.slug = ?";
