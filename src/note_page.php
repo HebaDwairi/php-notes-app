@@ -2,10 +2,13 @@
 require_once __DIR__ . '/session.php';
 require __DIR__ . '/config.php';
 require __DIR__  . "/User.php";
-
+require __DIR__  . "/Comment.php";
 
 if (isset($_GET['slug'])) {
     $note = $notes_repo->findBySlug($_GET['slug']);
+
+    $comments_repo = new CommentRepository();
+    $comments = $comments_repo->findAllByNoteId($note->id);
 }
 else {
      header('Location: index.php');
@@ -41,7 +44,7 @@ else {
 </head>
 <body class="bg-slate-800 text-slate-300 min-h-screen">
     <?php include 'header.php'; ?>
-    <div class="flex flex-col lg:flex-row gap-6 p-4 max-w-7xl mx-auto h-4/5">
+    <div class="flex flex-col  gap-6 p-4 max-w-7xl mx-auto h-4/5">
         <div class=" mx-auto p-6 shadow-md rounded-lg space-y-4 mt-4 bg-slate-700 text-white w-full lg:w-2/3 ">
             <div class="flex justify-between">
                 <div class="border-b border-slate-500 ">
@@ -71,6 +74,41 @@ else {
                 <p class='text-sm text-slate-500 mt-5'>Edited: <?= $note->updated_at ?></p>
                 <p class='text-sm text-slate-500'>Created: <?= $note->created_at ?></p>
             </div>
+
+
+
+            <div class=" p-4 rounded-lg  flex flex-col">
+                <h2 class="font-bold text-xl border-b w-full border-slate-500 pb-4 text-center">Comments</h2>
+                <form action="add_comment.php" method="POST">
+                    <div class="m-4 bg-slate-800/60 rounded-xl p-4 ">
+                        <label class="text-slate-300/70 font-bold " for="comment">Add a comment</label>
+                        <div class="flex gap-4">
+                            <textarea
+                                name="content"
+                                placeholder="write your comment here..."
+                                class="bg-slate-600 p-2 rounded-xl w-full border-2 border-slate-500"
+                                rows=1></textarea>
+                            <input type="hidden" value=<?= $note->id?> name="note_id">
+                            <button type="submit"
+                            class="bg-teal-500 hover:bg-teal-400 text-slate-800 font-bold py-3 px-4 rounded-xl transition-colors">Add</button>
+                        </div>
+                    </div>
+                    
+                </form>
+                <ul>
+                    <?php foreach($comments as $c):?>
+                        <li class="bg-slate-600 rounded-lg p-2 px-4 mx-4 mb-2">
+                            <h2 class="font-bold text-slate-300/80 "><?= htmlspecialchars($c->is_guest? $c->guest_name : $c->username) ?></h2>
+                            <div class="flex items-center justify-between">
+                                <p class="rounded-xl mx-2"><?= htmlspecialchars($c->content) ?></p>
+                                <p class="text-sm text-slate-300/50"><?= date("d-m-Y", strtotime($c->created_at)) ?></p>
+                            </div>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+
+
 
         </div>
     </div>
