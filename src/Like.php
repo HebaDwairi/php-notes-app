@@ -12,6 +12,11 @@ class Likes {
     $stmt->execute([$user_id, $note_id]);
   }
 
+  public function delete($note_id, $user_id) {
+    $stmt = $this->pdo->prepare("DELETE FROM likes WHERE user_id = ? AND note_id = ?");
+    $stmt->execute([$user_id, $note_id]);
+  }
+
   public function isNoteLiked($user_id, $note_id) {
     $stmt = $this->pdo->prepare("
             SELECT COUNT(*) as num_likes
