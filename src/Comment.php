@@ -45,16 +45,16 @@ class CommentRepository {
     $stmt->execute([$c->content, $c->note_id, $c->is_guest, $c->is_guest ? $c->guest_name : $c->user_id]);
   }
 
-  public function delete(Comment $c) {
+  public function delete($id) {
     $sql = "DELETE FROM comments WHERE id = ?";
     $stmt = $this->pdo->prepare($sql);
-    $stmt->execute([$c->id]);
+    $stmt->execute([$id]);
   }
 
-  public function approve(Comment $comment) {
+  public function approve($id) {
     $sql = "UPDATE comments SET status = 'approved' WHERE id = ?";
     $stmt = $this->pdo->prepare($sql);
-    $stmt->execute([$c->id]);
+    $stmt->execute([$id]);
   }
 
   public function findAllByNoteId($note_id) {
@@ -77,7 +77,22 @@ class CommentRepository {
   }
 
   public function findAllPending() {
+    $sql = "SELECT comments.*, users.username
+            From comments
+            LEFT JOIN users ON users.id = comments.user_id
+            WHERE status = 'pending'";
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->execute();
 
+    $comments= [];
+
+    while($data = $stmt->fetch()) {
+      $c = $this->comment_from_db_row($data);
+      $comments[] = $c;
+    }
+    
+
+    return $comments;
   }
 
   private function comment_from_db_row($data) {

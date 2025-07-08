@@ -5,6 +5,7 @@ class User {
   public $username;
   public $email;
   public $password_hash;
+  public $is_admin;
   public $created_at;
   public $updated_at;
 
@@ -19,12 +20,13 @@ class User {
     return $user;
   }
 
-  public static function fromDatabase($id, $username, $email, $password_hash, $created_at=null, $updated_at=null) {
+  public static function fromDatabase($id, $username, $email, $password_hash, $created_at=null, $updated_at=null, $is_admin=null) {
     $user = new User();
     $user->id = $id;
     $user->username = $username;
     $user->email = $email;
     $user->password_hash = $password_hash;
+    $user->is_admin = $is_admin;
     $user->created_at = $created_at;
     $user->updated_at = $updated_at;
     return $user;
@@ -64,7 +66,8 @@ class UserRepository {
         $data['email'],
         $data['password_hash'],
         $data['created_at'],
-        $data['updated_at']
+        $data['updated_at'],
+        $data['is_admin'],
       );
     }
     
@@ -85,7 +88,8 @@ class UserRepository {
         $data['email'],
         $data['password_hash'],
         $data['created_at'],
-        $data['updated_at']
+        $data['updated_at'],
+        $data['is_admin'],
       );
     }
     
