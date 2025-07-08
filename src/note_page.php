@@ -16,15 +16,15 @@ if (isset($_GET['slug'])) {
     
 }
 elseif (isset($_POST["like_note"]) && !empty($_SESSION['user_id'])){
-    $likes->create($_POST["note_id"], $_SESSION['user_id']);
+    if(!$likes->isNoteLiked($_SESSION['user_id'], $_POST["note_id"])) {
+        $likes->create($_POST["note_id"], $_SESSION['user_id']);
+    }
     header('Location: ' .$_SERVER['HTTP_REFERER']);
 }
 else {
     header('Location: index.php');
     exit;
 }
-
-
 
 ?>
 

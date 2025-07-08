@@ -92,8 +92,11 @@ function previewHTML($html, $limit = 200) {
                                         ?>
                                     </p>
                                     <div class="flex justify-between items-center mt-5 px-4 pb-4">
-                                        <p class='text-xs text-slate-500'>Edited: <?= htmlspecialchars($note->updated_at) ?></p>
-                                        <p class='text-xs text-slate-500'>Created: <?= htmlspecialchars($note->created_at) ?></p>
+                                        <p class="font-bold"><?= $note->likes?> likes</p>
+                                        <div>
+                                            <p class='text-xs text-slate-500'>Edited: <?= htmlspecialchars($note->updated_at) ?></p>
+                                            <p class='text-xs text-slate-500'>Created: <?= htmlspecialchars($note->created_at) ?></p>
+                                        </div>
                                     </div>
                                 </a>
                             </li>
@@ -110,7 +113,7 @@ function previewHTML($html, $limit = 200) {
                     class="bg-accent hover:bg-accent-hover text-slate-800 py-2 px-3 rounded-xl transition-colors mx-auto "
                    >Load More</button>
             </div>
-            <?php if(!empty($_SESSION['is_admin']) && $_SESSION['is_admin']): ?>
+            <?php if(!empty($_SESSION['is_admin'])): ?>
                 <div class="flex flex-col w-full lg:w-1/3 p-6 shadow-md rounded-xl bg-slate-700 space-y-4 ">
                     <h2 class="text-slate-300 font-bold text-lg">pending comments</h2>
                     <ul>

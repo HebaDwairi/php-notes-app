@@ -95,7 +95,8 @@ class NoteRepository {
   }
 
   public function findByUser($user_id) {
-    $sql = "SELECT notes.*, users.username
+    $sql = "SELECT notes.*, users.username,
+            (SELECT count(*) FROM likes WHERE likes.note_id = notes.id) as likes
             FROM notes 
             JOIN users ON notes.user_id = users.id
             WHERE notes.user_id = ?
@@ -115,16 +116,12 @@ class NoteRepository {
   }
 
   public function findBySlug($slug) {
-    $sql = "SELECT notes.*, users.username
-            FROM notes 
-            JOIN users ON notes.user_id = users.id
-            WHERE notes.slug = ?";
-
     $sql = "SELECT notes.*, users.username, 
             (SELECT count(*) FROM likes WHERE note_id = notes.id) as likes
             FROM notes 
             JOIN users ON notes.user_id = users.id
             WHERE notes.slug = ?";
+    
     $stmt = $this->pdo->prepare($sql);
     $stmt->execute([$slug]);
     
@@ -205,7 +202,8 @@ class NoteRepository {
   public function getOlderThan($updatedAt = null, $id = null, $limit = 10) {
     $notes = [];
     $params = [];
-    $sql = "SELECT notes.*, users.username
+    $sql = "SELECT notes.*, users.username,
+            (SELECT count(*) FROM likes WHERE note_id = notes.id) as likes
             FROM notes
             JOIN users ON notes.user_id = users.id";
 
@@ -233,7 +231,8 @@ class NoteRepository {
   public function getOlderThanByUser($user_id, $updatedAt = null, $id = null, $limit = 10) {
     $notes = [];
     $params = [$user_id];
-    $sql = "SELECT notes.*, users.username
+    $sql = "SELECT notes.*, users.username,
+            (SELECT count(*) FROM likes WHERE note_id = notes.id) as likes
             FROM notes
             JOIN users ON notes.user_id = users.id
             WHERE notes.user_id = ?";

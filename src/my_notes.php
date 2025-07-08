@@ -167,8 +167,11 @@ function previewHTML($html, $limit = 200) {
                                         ?>
                                     </p>
                                     <div class="flex justify-between items-center mt-5 px-4 pb-4">
-                                        <p class='text-xs text-slate-500'>Edited: <?= htmlspecialchars($note->updated_at) ?></p>
-                                        <p class='text-xs text-slate-500'>Created: <?= htmlspecialchars($note->created_at) ?></p>
+                                        <p class="font-bold"><?= $note->likes?> likes</p>
+                                        <div>
+                                            <p class='text-xs text-slate-500'>Edited: <?= htmlspecialchars($note->updated_at) ?></p>
+                                            <p class='text-xs text-slate-500'>Created: <?= htmlspecialchars($note->created_at) ?></p>
+                                        </div>
                                     </div>
                                 
                             </li>
