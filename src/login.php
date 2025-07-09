@@ -4,7 +4,7 @@ require __DIR__  . "/config.php";
 require __DIR__  . "/User.php";
 
 if (isset($_SESSION['user_id'])) {
-    header('Location: index.php');
+    header('Location: /');
     exit;
 }
 
@@ -31,7 +31,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     $_SESSION['user_id'] = $user->id;
     $_SESSION['username'] = $user->username;
     $_SESSION['is_admin'] = $user->is_admin;
-    header('Location: index.php');
+    header('Location: /');
     exit;
   }
 
@@ -78,7 +78,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
           class="bg-teal-400 w-full hover:bg-teal-300 text-slate-800 font-bold py-2 px-4 rounded mx-auto my-2">Login</button>
         <p class="mt-4 text-center text-sm text-slate-400">
           Don't have an account? 
-          <a href="register.php" class="text-teal-300 hover:underline">Register</a>
+          <a href="/register" class="text-teal-300 hover:underline">Register</a>
         </p>
       </form>
     </div>

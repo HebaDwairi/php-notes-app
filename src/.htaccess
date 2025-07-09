@@ -1,0 +1,12 @@
+RewriteEngine On
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+#transform /notes/your-slug into /note_page.php?slug=your-slug
+RewriteRule ^notes/([a-zA-Z0-9_-]+)/?$ note_page.php?slug=$1 [L,NC]
+RewriteRule ^/?$ index.php [L]
+RewriteRule ^notes$ my_notes.php [L,QSA]
+RewriteRule ^notes/edit/([0-9]+)$ edit_note.php?id=$1 [L,QSA]
+RewriteRule ^login$ login.php [L,QSA]
+RewriteRule ^register$ register.php [L,QSA]

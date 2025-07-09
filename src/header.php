@@ -7,7 +7,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
     <div class="max-w-7xl px-4 mx-auto">
         <div class="flex justify-between items-center ">
             <div class="flex items-center gap-4 w-1/2">
-                <a href="index.php">
+                <a href="/">
                   <h1 class="text-3xl font-black p-2 ml-4">Notes</h1>
                 </a>
                 <?php if($current_page == "index.php" || $current_page == "my_notes.php"): ?>
@@ -34,12 +34,12 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     Hi, <?= htmlspecialchars($_SESSION['username']) ?>!
                 </span>
 
-                <a href="my_notes.php"
+                <a href="/notes"
                 class="px-4 py-2 rounded-xl bg-teal-500 text-slate-900 font-semibold hover:bg-teal-400 transition">
                     My Notes
                 </a>
 
-                <a href="logout.php"
+                <a href="/logout.php"
                 class="px-4 py-2 rounded-xl bg-slate-600 text-white font-semibold hover:bg-slate-500 transition">
                     Logout
                 </a>
@@ -48,7 +48,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
             <?php endif; ?>
             <?php if(!isset($_SESSION['user_id'])):?>
               <div class="flex items-center w-1/2 justify-end">
-                  <a href="login.php" class="text-slate-800 bg-teal-500 rounded-xl font-bold text-lg p-1 px-5 my-2 mr-7 hover:bg-teal-400">Log in</a>
+                  <a href="/login" class="text-slate-800 bg-teal-500 rounded-xl font-bold text-lg p-1 px-5 my-2 mr-7 hover:bg-teal-400">Log in</a>
               </div>
             <?php endif; ?>
         </div>

@@ -8,12 +8,12 @@ $image_path = null;
 
 if (empty($title) || empty($content)) {
     $_SESSION['message'] = 'All fields are required';
-    header('Location: my_notes.php');
+    header('Location: /notes');
     exit;
 }
 if (strlen($title) > 255) {
     $_SESSION['message'] = 'Title must be less than 255 characters';
-    header('Location: my_notes.php');
+    header('Location: /notes');
     exit;
 }
 if(!empty($_FILES['image']['name'])) {
@@ -25,7 +25,7 @@ if(!empty($_FILES['image']['name'])) {
     $allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
     if (!in_array($mimeType, $allowed)) {
         $_SESSION['message'] = 'Invalid file type, allowed types: jpeg, png, webp, gif';
-        header('Location: my_notes.php');
+        header('Location: /notes');
         exit;
     }
 
@@ -43,7 +43,7 @@ if(!empty($_FILES['image']['name'])) {
     }
     else {
         $_SESSION['message'] = "Failed to upload image";
-        header("Location: my_notes.php");
+        header("Location: /notes");
         exit;
     }
 }

@@ -43,6 +43,16 @@ class CommentRepository {
 
     $stmt = $this->pdo->prepare($sql);
     $stmt->execute([$c->content, $c->note_id, $c->is_guest, $c->is_guest ? $c->guest_name : $c->user_id]);
+    $id = $this->pdo->lastInsertId();
+
+    $stmt = $this->pdo->prepare("SELECT comments.*, users.username 
+                                 FROM comments 
+                                 LEFT JOIN users ON users.id = comments.user_id  
+                                 WHERE comments.id = ?");
+    $stmt->execute([$id]);
+    $result =  $this->comment_from_db_row($stmt->fetch());
+    $c->username = $result->username;
+    $c->created_at = $result->created_at;
   }
 
   public function delete($id) {
@@ -61,7 +71,9 @@ class CommentRepository {
     $sql = "SELECT comments.*, users.username
             From comments
             LEFT JOIN users ON users.id = comments.user_id
-            WHERE note_id = ?";
+            WHERE note_id = ?
+            ORDER BY created_at DESC";
+
     $stmt = $this->pdo->prepare($sql);
     $stmt->execute([$note_id]);
 
@@ -96,16 +108,16 @@ class CommentRepository {
   }
 
   private function comment_from_db_row($data) {
-  $comment = new Comment(
-      $data['content'],
-      $data['note_id'],
-      $data['is_guest'],
-      $data['guest_name'],
-      $data['user_id'],
-      $data['id'],
-      $data['status'],
-      $data['created_at']
-    );
+    $comment = new Comment(
+        $data['content'],
+        $data['note_id'],
+        $data['is_guest'],
+        $data['guest_name'],
+        $data['user_id'],
+        $data['id'],
+        $data['status'],
+        date("d-m-Y", strtotime($data['created_at'])),
+      );
 
     $comment->username = $data['username'];
 

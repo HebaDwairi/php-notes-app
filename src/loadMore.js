@@ -60,7 +60,7 @@ loadMoreBtn?.addEventListener('click', async () => {
       li.className = 'bg-slate-800/50 rounded-xl border border-transparent hover:text-accent hover:border-accent transition-colors duration-300 group overflow-hidden';
 
       li.innerHTML = `
-        <a href="note_page.php?slug=${note.slug}" class="block">
+        <a href="/notes/${note.slug}" class="block">
           ${note.image_path ? `<img src="${note.image_path}" alt="${note.title}" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300 rounded-t-xl">` : ''}
           <div class='flex justify-between items-center p-4'>
             <div>

@@ -4,7 +4,7 @@ require __DIR__ . '/config.php';
 
 
 if (!isset($_SESSION['user_id'])) {
-    header('Location: login.php');
+    header('Location: /login');
     exit;
 }
 
@@ -137,7 +137,7 @@ function previewHTML($html, $limit = 200) {
                                        transition-colors duration-300 group overflow-hidden'
                                 data-id="<?= $note->id ?>" 
                                 data-updated-at="<?= $note->updated_at ?>">
-                                <a href="note_page.php?slug=<?= $note->slug ?> " class="block ">
+                                <a href="notes/<?= $note->slug ?> " class="block ">
                                     <?php if (!empty($note->image_path)): ?>
                                         <img src="<?= htmlspecialchars($note->image_path) ?>" 
                                             alt="<?= htmlspecialchars($note->title) ?>" 

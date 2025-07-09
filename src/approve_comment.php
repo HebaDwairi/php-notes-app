@@ -4,7 +4,7 @@ require __DIR__ . '/config.php';
 require __DIR__ . '/Comment.php';
 
 if (!isset($_SESSION['user_id'])) {
-    header('Location: login.php');
+    header('Location: /login');
     exit;
 }
 
@@ -26,5 +26,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $_SESSION['message'] = 'Failed to approve comment' . $e->getMessage() . $id;
     }
 
-    header('Location: index.php');
+    header('Location: /');
 }

@@ -3,7 +3,7 @@ require_once __DIR__ . '/session.php';
 require __DIR__ . '/config.php';
 
 if (!isset($_SESSION['user_id'])) {
-    header('Location: login.php');
+    header('Location: /login');
     exit;
 }
 
@@ -26,5 +26,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['message'] = 'Failed to delete note' . $e->getMessage() . $id;
     }
 
-    header('Location: my_notes.php');
+    header('Location: /notes');
 }

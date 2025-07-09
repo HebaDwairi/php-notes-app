@@ -3,18 +3,25 @@ require_once __DIR__ . '/session.php';
 require __DIR__  . "/Comment.php";
 require __DIR__  . "/Database.php";
 
+header('Content-Type: application/json');
+
+$raw = file_get_contents("php://input");
+$data = json_decode($raw, true);
 $user_id = $_SESSION['user_id'] ?? null;
 
 
-if($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $content = $_POST['content'] ?? null;
-  $note_id = $_POST['note_id'] ?? null;
+if($data) {
+  $content = $data['content'];
+  $note_id = $data['note_id'];
   $is_guest = empty($user_id)? 1 : 0;
   $guest_name = 'guest-' . rand(1000, 1999);
 
   if(empty($note_id) || empty($content)) {
-    //i should add a nicer message
-    die("note_id and comment content are required");
+    echo json_encode([
+      'success' => false,
+      'error' => "note_id and comment content are required",
+    ]);
+    exit;
   }
 
   try {
@@ -29,11 +36,21 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $commentRepo->create($comment);
+
+    echo json_encode([
+      'success' => true,
+      'comment' => $comment->content,
+      'username' => $comment->username,
+      'created_at' => $comment->created_at,
+      'guest_name' => $comment->guest_name,
+      'is_guest' => $comment->is_guest
+    ]);
   }
   catch(Exception $e) {
-    die("error creating new comment". $e->getMessage());
+    echo json_encode([
+      'success' => false,
+      'error' => $e->getMessage(),
+    ]);
   }
 
-  header('Location: ' .$_SERVER['HTTP_REFERER']);
-  exit;
 }

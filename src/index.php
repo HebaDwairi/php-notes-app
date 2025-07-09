@@ -57,7 +57,7 @@ function previewHTML($html, $limit = 200) {
 
     <?php include 'header.php'; ?>
 
-    <div class="mx-auto max-w-7xl p-8">
+    <div class="mx-auto max-w-7xl lg:p-8">
         <div class="flex justify-center gap-4">
         
             <div class="flex flex-col w-full lg:w-2/3 p-6 shadow-md rounded-xl bg-slate-700 space-y-4 ">
@@ -72,7 +72,7 @@ function previewHTML($html, $limit = 200) {
                             data-id="<?= $note->id ?>" 
                             data-updated-at="<?= $note->updated_at ?>">
 
-                                <a href="note_page.php?slug=<?= $note->slug ?> " class="block ">
+                                <a href="notes/<?= $note->slug ?> " class="block ">
                                     <?php if (!empty($note->image_path)): ?>
                                         <img src="<?= htmlspecialchars($note->image_path) ?>" 
                                             alt="<?= htmlspecialchars($note->title) ?>" 
