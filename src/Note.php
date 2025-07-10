@@ -60,9 +60,15 @@ class NoteRepository {
     $stmt = $this->pdo->prepare($sql);
     $stmt->execute([$note->title, $note->content, $note->user_id, $note->slug, $note->image_path]);
   }
+  
 
   public function update(Note $note) {
-    $note->slug = $this->create_slug($note->title);
+
+    $oldNote = $this->findById($note->id);
+
+    if($oldNote->title != $note->title) {
+      $note->slug = $this->create_slug($note->title);
+    }
 
     $sql = "UPDATE notes SET title = ?, content = ?, updated_at = NOW(), slug = ?, image_path = ? WHERE id = ?";
     $stmt = $this->pdo->prepare($sql);

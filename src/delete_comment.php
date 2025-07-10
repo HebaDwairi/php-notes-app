@@ -23,8 +23,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         }
     } 
     catch(Exception $e){
-        $_SESSION['message'] = 'Failed to delete comment' . $e->getMessage() . $id;
+        $_SESSION['message'] = 'Failed to delete comment' . $e->getMessage();
     }
 
-    header('Location: /');
+    header('Location: ' . $_SERVER['HTTP_REFERER']);
 }

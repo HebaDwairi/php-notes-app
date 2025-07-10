@@ -23,6 +23,7 @@ if (isset($_GET['id'])) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = $_POST['id'];
+    $slug = $_POST['slug'];
     require __DIR__ . '/process_note_form.php';
     
     try{
@@ -33,8 +34,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if($old_note->user_id == $_SESSION['user_id']) {
-            $note = new Note(title: $title, content: $content, id: $id, image_path: $image_path, user_id: '');
+            $note = new Note(title: $title, content: $content, id: $id, image_path: $image_path, user_id: '', slug: $slug);
             $notes_repo->update($note);
+            header("Location: /notes/" . $note->slug);
+            exit;
         }
         else {
             die("you don't have the permission to edit this note");
@@ -44,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['message'] = 'Failed to update note';
     }
 
-    header('Location: /notes');
+    header("Location: /notes");
     exit;
 }
 
@@ -108,7 +111,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         required
                         class="border bg-slate-700 border-slate-600 p-2 rounded w-full h-52"><?php echo htmlspecialchars($note->content); ?></textarea>
                 </div>
-                <input type="hidden" name="id" value="<?php echo htmlspecialchars($note->id); ?>">
+                <input type="hidden" name="id" value="<?= htmlspecialchars($note->id); ?>">
+                <input type="hidden" name="slug" value="<?= htmlspecialchars($note->slug); ?>">
                 <?php echo $message ?? null ?>
                 <button
                     type="submit"

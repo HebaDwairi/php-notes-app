@@ -15,15 +15,6 @@ if (isset($_GET['slug'])) {
     $comments = $comments_repo->findAllByNoteId($note->id);
     
 }
-elseif (isset($_POST["like_note"]) && !empty($_SESSION['user_id'])){
-    if(!$likes->isNoteLiked($_SESSION['user_id'], $_POST["note_id"])) {
-        $likes->create($_POST["note_id"], $_SESSION['user_id']);
-    }
-    else {
-        $likes->delete($_POST["note_id"], $_SESSION['user_id']);
-    }
-    header('Location: ' .$_SERVER['HTTP_REFERER']);
-}
 else {
     header('Location: /');
     exit;
@@ -62,7 +53,7 @@ else {
 <body class="bg-slate-800 text-slate-300 min-h-screen">
     <?php include 'header.php'; ?>
     <div class="flex flex-col  gap-6 p-4 max-w-7xl mx-auto h-4/5">
-        <div class=" mx-auto p-8 shadow-md rounded-lg space-y-4 mt-4 bg-slate-700 text-white w-full lg:w-2/3 ">
+        <div class=" mx-auto p-8 shadow-md rounded-xl space-y-4 mt-4 bg-slate-700 text-white w-full lg:w-2/3 ">
             <div class="flex justify-between">
                 <div class="border-b-2 border-slate-600 ">
                     <h2 class="text-lg font-bold"><?= $note->title ?></h2>
